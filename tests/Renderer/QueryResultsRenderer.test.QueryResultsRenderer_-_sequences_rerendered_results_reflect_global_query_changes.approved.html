@@ -1,6 +1,6 @@
 <html>
 <meta charset="UTF-8">
-<h2>Initial results:</h2>
+<h2>Initial results - expect 2 tasks:</h2>
 
 <!--
 - [ ] parent 📅 2025-12-01
@@ -8,12 +8,6 @@
 -->
 
 <div>
-  <pre class="plugin-tasks-query-explanation">
-Explanation of this Tasks code block query:
-
-  No filters supplied. All tasks will match the query.
-</pre
-  >
   <ul class="contains-task-list plugin-tasks-query-result tasks-layout-hide-urgency">
     <li
       class="task-list-item plugin-tasks-list-item"
@@ -64,7 +58,7 @@ Explanation of this Tasks code block query:
   </ul>
   <div class="task-count">2 tasks</div>
 </div>
-<h2>Check that urgency is shown by global query:</h2>
+<h2>Results after editing Global Query - expect 2 tasks sorted:</h2>
 
 <!--
 - [ ] parent 📅 2025-12-01
@@ -72,19 +66,7 @@ Explanation of this Tasks code block query:
 -->
 
 <div>
-  <pre class="plugin-tasks-query-explanation">
-Explanation of the global query:
-
-  No filters supplied. All tasks will match the query.
-
-  show urgency
-
-Explanation of this Tasks code block query:
-
-  No filters supplied. All tasks will match the query.
-</pre
-  >
-  <ul class="contains-task-list plugin-tasks-query-result">
+  <ul class="contains-task-list plugin-tasks-query-result tasks-layout-hide-urgency">
     <li
       class="task-list-item plugin-tasks-list-item"
       data-task-due="today"
@@ -101,7 +83,6 @@ Explanation of this Tasks code block query:
         </span>
       </span>
       <span class="task-extras">
-        <span class="tasks-urgency">10.75</span>
         <span class="tasks-backlink">
           (
           <a rel="noopener" target="_blank" class="internal-link">/</a>
@@ -124,7 +105,6 @@ Explanation of this Tasks code block query:
         <span class="task-id"><span>🆔 childID</span></span>
       </span>
       <span class="task-extras">
-        <span class="tasks-urgency">1.95</span>
         <span class="tasks-backlink">
           (
           <a rel="noopener" target="_blank" class="internal-link">/</a>

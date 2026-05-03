@@ -9,7 +9,7 @@
 | priority:: highest priority | priority:: highest]  |
 | priority:: lowest priority | priority:: lowest]  |
 | repeat:: recurring (repeat) | repeat::  |
-| created:: created today (2022-07-11) | created:: 2022-07-11]  |
+| created:: created now (2022-07-11 15:00:01) | created:: 2022-07-11 15:00:01]  |
 | id:: id | id::  |
 | dependsOn:: depends on id | dependsOn::  |
 | onCompletion:: on completion | onCompletion::  |
@@ -26,6 +26,7 @@
 | every week on Thursday | repeat:: every week on Thursday]  |
 | every week on Friday | repeat:: every week on Friday]  |
 | every week on Saturday | repeat:: every week on Saturday]  |
+| now (2022-07-11 15:00:01) | due:: 2022-07-11 15:00:01]  |
 | today (2022-07-11) | due:: 2022-07-11]  |
 | tomorrow (2022-07-12) | due:: 2022-07-12]  |
 | Sunday (2022-07-17) | due:: 2022-07-17]  |
@@ -38,6 +39,7 @@
 | next week (2022-07-18) | due:: 2022-07-18]  |
 | next month (2022-08-11) | due:: 2022-08-11]  |
 | next year (2023-07-11) | due:: 2023-07-11]  |
+| now (2022-07-11 15:00:01) | scheduled:: 2022-07-11 15:00:01]  |
 | today (2022-07-11) | scheduled:: 2022-07-11]  |
 | tomorrow (2022-07-12) | scheduled:: 2022-07-12]  |
 | Sunday (2022-07-17) | scheduled:: 2022-07-17]  |
@@ -50,6 +52,7 @@
 | next week (2022-07-18) | scheduled:: 2022-07-18]  |
 | next month (2022-08-11) | scheduled:: 2022-08-11]  |
 | next year (2023-07-11) | scheduled:: 2023-07-11]  |
+| now (2022-07-11 15:00:01) | start:: 2022-07-11 15:00:01]  |
 | today (2022-07-11) | start:: 2022-07-11]  |
 | tomorrow (2022-07-12) | start:: 2022-07-12]  |
 | Sunday (2022-07-17) | start:: 2022-07-17]  |

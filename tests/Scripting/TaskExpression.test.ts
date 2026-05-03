@@ -2,6 +2,11 @@ import { TaskExpression, constructArguments, parseAndEvaluateExpression } from '
 import { TaskBuilder } from '../TestingTools/TaskBuilder';
 import { makeQueryContext } from '../../src/Scripting/QueryContext';
 import { TasksFile } from '../../src/Scripting/TasksFile';
+import { resetSettings, updateSettings } from '../../src/Config/Settings';
+
+afterEach(() => {
+    resetSettings();
+});
 
 describe('TaskExpression', () => {
     describe('low level functions', () => {
@@ -16,6 +21,14 @@ describe('TaskExpression', () => {
             const task = new TaskBuilder().build();
             const result = parseAndEvaluateExpression(task, 'query.file.path', queryContext);
             expect(result).toEqual('test.md');
+        });
+
+        it('should expose the daily start time on the query object', () => {
+            updateSettings({ dailyStartTime: '04:30:15' });
+            const queryContext = makeQueryContext(new TasksFile('test.md'));
+            const task = new TaskBuilder().build();
+            const result = parseAndEvaluateExpression(task, 'query.dailyStartTime', queryContext);
+            expect(result).toEqual('04:30:15');
         });
 
         it('should behave predictably if no QueryContext supplied', () => {

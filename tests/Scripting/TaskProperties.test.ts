@@ -102,6 +102,8 @@ describe('task', () => {
             `task.due.format('dddd', ${textToUseIfUndated})`,
             'task.due.toISOString()',
             'task.due.toISOString(true)', // https://momentjs.com/docs/#/displaying/as-iso-string/ - true prevents UTC conversion
+            "task.due.isSameDayWithDailyStart('2023-07-04')",
+            "task.due.isSameDayWithDailyStart('2023-07-03', '04:00')",
             'task.due.category.name',
             'task.due.category.sortOrder',
             'task.due.category.groupText',

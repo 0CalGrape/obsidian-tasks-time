@@ -953,6 +953,27 @@ group by folder
         });
 
         describe('via "filter by function"', () => {
+            it('should filter task dates precisely to the second', () => {
+                const source = 'filter by function task.due.formatAsDateAndTime() === "2024-05-03 12:34:56"';
+                const query = new Query(source, file);
+
+                expect(query.error).toBeUndefined();
+
+                const matchingTask = new TaskBuilder().description('matching').dueDate('2024-05-03 12:34:56').build();
+                const sameDateDifferentSecond = new TaskBuilder()
+                    .description('different second')
+                    .dueDate('2024-05-03 12:34:57')
+                    .build();
+                const sameDateNoTime = new TaskBuilder().description('date only').dueDate('2024-05-03').build();
+
+                const queryResult = query.applyQueryToTasks([matchingTask, sameDateDifferentSecond, sameDateNoTime]);
+
+                expect(queryResult.totalTasksCount).toEqual(1);
+                expect(queryResult.asMarkdown()).toContain('matching');
+                expect(queryResult.asMarkdown()).not.toContain('different second');
+                expect(queryResult.asMarkdown()).not.toContain('date only');
+            });
+
             it('should use a list property in a custom filter', () => {
                 // Act
                 const source = `

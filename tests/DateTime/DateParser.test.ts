@@ -2,11 +2,17 @@
  * @jest-environment jsdom
  */
 import moment from 'moment';
+import { resetSettings, updateSettings } from '../../src/Config/Settings';
 import { DateParser } from '../../src/DateTime/DateParser';
 
 import { TaskRegularExpressions } from '../../src/Task/TaskRegularExpressions';
 
 window.moment = moment;
+
+afterEach(() => {
+    jest.useRealTimers();
+    resetSettings();
+});
 
 function testParsingeSingleDate(input: string, result: string) {
     const moment = DateParser.parseDate(input);
@@ -38,7 +44,32 @@ describe('DateParser - single dates', () => {
     it('should return date at midnight', () => {
         const dateToParse = '2023-07-08';
         const parsedDate = DateParser.parseDate(dateToParse);
-        expect(parsedDate.format('YYYY-MM-DD HH:mm')).toStrictEqual('2023-07-08 00:00');
+        expect(parsedDate.format('YYYY-MM-DD HH:mm:ss')).toStrictEqual('2023-07-08 00:00:00');
+    });
+
+    it('should preserve seconds when a time is supplied', () => {
+        const parsedDate = DateParser.parseDate('2023-07-08 12:34:56');
+        expect(parsedDate.format('YYYY-MM-DD HH:mm:ss')).toStrictEqual('2023-07-08 12:34:56');
+    });
+
+    it('should treat today before daily start as the previous date', () => {
+        jest.useFakeTimers();
+        jest.setSystemTime(new Date('2026-05-03T03:30:15'));
+        updateSettings({ dailyStartTime: '04:00' });
+
+        const parsedDate = DateParser.parseDate('today');
+
+        expect(parsedDate.format(TaskRegularExpressions.dateFormat)).toStrictEqual('2026-05-02');
+    });
+
+    it('should treat today at daily start as the current date', () => {
+        jest.useFakeTimers();
+        jest.setSystemTime(new Date('2026-05-03T04:00:00'));
+        updateSettings({ dailyStartTime: '04:00' });
+
+        const parsedDate = DateParser.parseDate('today');
+
+        expect(parsedDate.format(TaskRegularExpressions.dateFormat)).toStrictEqual('2026-05-03');
     });
 });
 
@@ -76,13 +107,9 @@ describe('DateParser - date ranges', () => {
 });
 
 describe('DateParser - relative date ranges', () => {
-    beforeAll(() => {
+    beforeEach(() => {
         jest.useFakeTimers();
-        jest.setSystemTime(new Date('2021-10-06'));
-    });
-
-    afterAll(() => {
-        jest.useRealTimers();
+        jest.setSystemTime(new Date('2021-10-06T12:00:00'));
     });
 
     it('should return relative date range (week)', () => {

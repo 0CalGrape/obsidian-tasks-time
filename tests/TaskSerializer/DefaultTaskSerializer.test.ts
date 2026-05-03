@@ -66,12 +66,12 @@ describe('validate emoji regular expressions', () => {
         expect(generateRegexApprovalTest()).toMatchInlineSnapshot(`
             "
             priorityRegex: /(🔺|⏫|🔼|🔽|⏬)\\ufe0f?$/
-            startDateRegex: /🛫\\ufe0f? *(\\d{4}-\\d{2}-\\d{2})$/
-            createdDateRegex: /➕\\ufe0f? *(\\d{4}-\\d{2}-\\d{2})$/
-            scheduledDateRegex: /(?:⏳|⌛)\\ufe0f? *(\\d{4}-\\d{2}-\\d{2})$/
-            dueDateRegex: /(?:📅|📆|🗓)\\ufe0f? *(\\d{4}-\\d{2}-\\d{2})$/
-            doneDateRegex: /✅\\ufe0f? *(\\d{4}-\\d{2}-\\d{2})$/
-            cancelledDateRegex: /❌\\ufe0f? *(\\d{4}-\\d{2}-\\d{2})$/
+            startDateRegex: /🛫\\ufe0f? *(\\d{4}-\\d{2}-\\d{2}(?: \\d{2}:\\d{2}:\\d{2})?)$/
+            createdDateRegex: /➕\\ufe0f? *(\\d{4}-\\d{2}-\\d{2}(?: \\d{2}:\\d{2}:\\d{2})?)$/
+            scheduledDateRegex: /(?:⏳|⌛)\\ufe0f? *(\\d{4}-\\d{2}-\\d{2}(?: \\d{2}:\\d{2}:\\d{2})?)$/
+            dueDateRegex: /(?:📅|📆|🗓)\\ufe0f? *(\\d{4}-\\d{2}-\\d{2}(?: \\d{2}:\\d{2}:\\d{2})?)$/
+            doneDateRegex: /✅\\ufe0f? *(\\d{4}-\\d{2}-\\d{2}(?: \\d{2}:\\d{2}:\\d{2})?)$/
+            cancelledDateRegex: /❌\\ufe0f? *(\\d{4}-\\d{2}-\\d{2}(?: \\d{2}:\\d{2}:\\d{2})?)$/
             recurrenceRegex: /🔁\\ufe0f? *([a-zA-Z0-9, !]+)$/
             onCompletionRegex: /🏁\\ufe0f? *([a-zA-Z]+)$/
             dependsOnRegex: /⛔\\ufe0f? *([a-zA-Z0-9-_]+( *, *[a-zA-Z0-9-_]+ *)*)$/
@@ -139,6 +139,13 @@ describe.each(symbolMap)("DefaultTaskSerializer with '$taskFormat' symbols", ({ 
             it('should parse a dueDate - with non-standard emoji 2', () => {
                 const taskDetails = deserialize('🗓 2021-06-20');
                 expect(taskDetails).toMatchTaskDetails({ ['dueDate']: moment('2021-06-20', 'YYYY-MM-DD') });
+            });
+
+            it('should parse a dueDate with seconds precision', () => {
+                const taskDetails = deserialize(`${dueDateSymbol} 2026-05-03 12:34:56`);
+                expect(taskDetails).toMatchTaskDetails({
+                    dueDate: moment('2026-05-03 12:34:56', 'YYYY-MM-DD HH:mm:ss'),
+                });
             });
         });
 
@@ -285,6 +292,13 @@ describe.each(symbolMap)("DefaultTaskSerializer with '$taskFormat' symbols", ({ 
         ] as const)('should serialize a $what', ({ what, symbol }) => {
             const serialized = serialize(new TaskBuilder()[what]('2021-06-20').description('').build());
             expect(serialized).toEqual(` ${symbol} 2021-06-20`);
+        });
+
+        it('should serialize a doneDate with seconds precision', () => {
+            const serialized = serialize(
+                new TaskBuilder().doneDate('2026-05-03 12:34:56').description('').build(),
+            );
+            expect(serialized).toEqual(` ${doneDateSymbol} 2026-05-03 12:34:56`);
         });
 
         it('should serialize a Highest, High, Medium, Low and Lowest priority', () => {

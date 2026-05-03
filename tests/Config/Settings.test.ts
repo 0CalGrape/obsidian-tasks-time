@@ -70,6 +70,11 @@ describe('resetSettings behaviour', () => {
         expect(currentSettings.searchResults.taskCountLocation).toBe('bottom');
     });
 
+    it('should have dailyStartTime default to 04:00', () => {
+        const currentSettings = getSettings();
+        expect(currentSettings.dailyStartTime).toBe('04:00');
+    });
+
     it('should completely remove properties not in defaultSettings', () => {
         // Arrange: Add an extra property that isn't in defaultSettings
         updateSettings({

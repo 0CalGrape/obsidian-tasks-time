@@ -221,14 +221,18 @@ describe('EditableTask tests', () => {
         editableTask.dueDate = '2024-07-13';
 
         const editedTasks = await editableTask.applyEdits(task, allTasks);
-        // TODO Why does this have the time 12:00?
-        //      When I edit a task in the plugin, in the modal, and then group by the following, the time is midnight,
-        //      so where is the time dropped in production code?
-        //          group by function task.due.formatAsDateAndTime()
-        //      Or have I misunderstood something?
-        //      For now, I would just like assurance that this is the same behaviour as
-        //      the code before this PR.... (I expect it is)
-        expect(editedTasks[0].dueDate).toEqualMoment(moment('2024-07-13T12:00:00.000Z'));
+        expect(editedTasks[0].dueDate?.format('YYYY-MM-DD HH:mm:ss')).toEqual('2024-07-13 00:00:00');
+    });
+
+    it('should set a date and time in YYYY-MM-DD HH:mm:ss format', async () => {
+        const task = new TaskBuilder().build();
+        const allTasks: Task[] = [];
+        const editableTask = EditableTask.fromTask(task, allTasks);
+
+        editableTask.dueDate = '2024-07-13 12:34:56';
+
+        const editedTasks = await editableTask.applyEdits(task, allTasks);
+        expect(editedTasks[0].dueDate?.format('YYYY-MM-DD HH:mm:ss')).toEqual('2024-07-13 12:34:56');
     });
 
     it('should honour the forwardOnly value', async () => {
@@ -236,19 +240,17 @@ describe('EditableTask tests', () => {
         const allTasks: Task[] = [];
         const editableTask = EditableTask.fromTask(task, allTasks);
 
-        jest.setSystemTime(new Date('2024-05-22')); // Wednesday 22nd May
+        jest.setSystemTime(new Date(2024, 4, 22, 12, 0, 0)); // Wednesday 22nd May, after daily start
 
         editableTask.dueDate = 'tuesday';
-        const tuesdayBefore = moment('2024-05-28T12:00:00.000Z');
-        const tuesdayAfter = moment('2024-05-21T12:00:00.000Z');
 
         editableTask.forwardOnly = true;
         const tasksFutureDay = await editableTask.applyEdits(task, allTasks);
-        expect(tasksFutureDay[0].dueDate).toEqualMoment(tuesdayBefore);
+        expect(tasksFutureDay[0].dueDate?.format('YYYY-MM-DD HH:mm:ss')).toEqual('2024-05-28 00:00:00');
 
         editableTask.forwardOnly = false;
         const tasksClosestDay = await editableTask.applyEdits(task, allTasks);
-        expect(tasksClosestDay[0].dueDate).toEqualMoment(tuesdayAfter);
+        expect(tasksClosestDay[0].dueDate?.format('YYYY-MM-DD HH:mm:ss')).toEqual('2024-05-21 00:00:00');
     });
 });
 

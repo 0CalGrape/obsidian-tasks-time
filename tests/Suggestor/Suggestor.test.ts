@@ -26,7 +26,7 @@ import { StatusConfiguration, StatusType } from '../../src/Statuses/StatusConfig
 window.moment = moment;
 
 // Set predictable date for all tests in this file
-const mockDate = new Date(moment('2022-07-11 15:00').valueOf());
+const mockDate = new Date(moment('2022-07-11 15:00:01').valueOf());
 
 const chronoSpy = jest
     .spyOn(chrono, 'parseDate')
@@ -36,6 +36,15 @@ const CAN_SAVE_EDITS = true;
 
 afterAll(() => {
     chronoSpy.mockRestore();
+});
+
+beforeEach(() => {
+    jest.useFakeTimers();
+    jest.setSystemTime(mockDate);
+});
+
+afterEach(() => {
+    jest.useRealTimers();
 });
 
 /**
@@ -234,7 +243,17 @@ ${JSON.stringify(suggestions[0], null, 4)}
     it('offers generic due date completions', () => {
         // Arrange
         const line = `- [ ] some task ${dueDateSymbol}`;
-        shouldStartWithSuggestionsContaining(line, ['today', 'tomorrow']);
+        shouldStartWithSuggestionsContaining(line, ['now', 'today']);
+    });
+
+    it('offers a now date completion with the current time', () => {
+        const line = `- [ ] some task ${dueDateSymbol} no`;
+        const suggestions = buildSuggestionsForEndOfLine(line);
+
+        expect(suggestions[0].displayText).toEqual('now (2022-07-11 15:00:01)');
+        expect(suggestions[0].appendText).toEqual(
+            `${dueDateSymbol} 2022-07-11 15:00:01${name === 'dataview' ? '] ' : ' '}`,
+        );
     });
 
     it('offers specific due date completions', () => {
@@ -297,7 +316,7 @@ ${JSON.stringify(suggestions[0], null, 4)}
     it('matches created property suggestion when user types "created" but not "today"', () => {
         // Arrange
         let line = '- [ ] some task cr';
-        shouldStartWithSuggestionsEqualling(line, [`${createdDateSymbol} created today (2022-07-11)`]);
+        shouldStartWithSuggestionsEqualling(line, [`${createdDateSymbol} created now (2022-07-11 15:00:01)`]);
 
         line = '- [ ] some task tod';
         const suggestions = buildSuggestionsForEndOfLine(line);
@@ -312,7 +331,7 @@ ${JSON.stringify(suggestions[0], null, 4)}
             // add a new case above if adding a new format
             expect(1).toEqual(2);
         }
-        expect(suggestions[0].displayText).not.toContain('created today');
+        expect(suggestions[0].displayText).not.toContain('created now');
     });
 
     describe('suggestions for dependency field ID', () => {

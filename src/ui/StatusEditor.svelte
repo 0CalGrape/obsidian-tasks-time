@@ -17,7 +17,7 @@
 
         if (isInStatus && dateFieldIsEmpty) {
             // the date field is empty and the status was set (set the date from the task with the applied status)
-            return editedValue.formatAsDate();
+            return editedValue.formatAsDateOrDateTime();
         }
 
         if (!isInStatus && !dateFieldIsEmpty) {

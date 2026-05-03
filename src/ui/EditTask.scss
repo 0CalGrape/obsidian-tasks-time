@@ -90,8 +90,17 @@
         min-width: 15em;
     }
 
-    .tasks-modal-date-editor-picker {
+    .tasks-modal-date-time-pickers {
+        display: inline-flex;
+        flex-wrap: wrap;
+        gap: .35em;
         margin-left: .5em;
+        vertical-align: middle;
+    }
+
+    .tasks-modal-date-editor-picker,
+    .tasks-modal-time-editor-picker {
+        min-width: 8.5em;
     }
 
     .tasks-modal-parsed-date {

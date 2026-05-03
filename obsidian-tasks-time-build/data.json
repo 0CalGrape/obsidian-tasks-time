@@ -1,0 +1,87 @@
+{
+  "presets": {},
+  "globalQuery": "",
+  "globalFilter": "",
+  "removeGlobalFilter": false,
+  "taskFormat": "tasksPluginEmoji",
+  "setCreatedDate": true,
+  "setDoneDate": true,
+  "setCancelledDate": true,
+  "dailyStartTime": "04:00",
+  "autoSuggestInEditor": true,
+  "autoSuggestMinMatch": 1,
+  "autoSuggestMaxItems": 5,
+  "provideAccessKeys": true,
+  "useFilenameAsScheduledDate": true,
+  "filenameAsScheduledDateFormat": "YY M D H m",
+  "filenameAsDateFolders": [],
+  "recurrenceOnNextLine": false,
+  "removeScheduledDateOnRecurrence": false,
+  "statusSettings": {
+    "coreStatuses": [
+      {
+        "symbol": " ",
+        "name": "待办",
+        "nextStatusSymbol": "/",
+        "availableAsCommand": true,
+        "type": "TODO"
+      },
+      {
+        "symbol": "x",
+        "name": "已完成",
+        "nextStatusSymbol": " ",
+        "availableAsCommand": true,
+        "type": "DONE"
+      }
+    ],
+    "customStatuses": [
+      {
+        "symbol": "-",
+        "name": "放弃",
+        "nextStatusSymbol": " ",
+        "availableAsCommand": true,
+        "type": "CANCELLED"
+      },
+      {
+        "symbol": "/",
+        "name": "推进中",
+        "nextStatusSymbol": "x",
+        "availableAsCommand": false,
+        "type": "IN_PROGRESS"
+      },
+      {
+        "symbol": "<",
+        "name": "拖延",
+        "nextStatusSymbol": " ",
+        "availableAsCommand": false,
+        "type": "TODO"
+      }
+    ]
+  },
+  "features": {
+    "INTERNAL_TESTING_ENABLED_BY_DEFAULT": true
+  },
+  "generalSettings": {},
+  "headingOpened": {
+    "Core Statuses": true,
+    "Custom Statuses": true,
+    "核心状态": true,
+    "自定义状态": true
+  },
+  "debugSettings": {
+    "ignoreSortInstructions": false,
+    "showTaskHiddenData": false,
+    "recordTimings": false
+  },
+  "loggingOptions": {
+    "minLevels": {
+      "": "info",
+      "tasks": "info",
+      "tasks.Cache": "info",
+      "tasks.Events": "info",
+      "tasks.File": "info",
+      "tasks.Query": "info",
+      "tasks.Task": "info"
+    }
+  }
+}

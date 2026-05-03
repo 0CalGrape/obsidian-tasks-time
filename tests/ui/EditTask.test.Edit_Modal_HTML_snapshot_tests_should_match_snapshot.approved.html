@@ -92,11 +92,27 @@
         id="due"
         type="text"
         class="tasks-modal-date-input"
-        placeholder="Try 'Mon' or 'tm' then space"
+        placeholder="Try 'Mon', 'tm ' or YYYY-MM-DD HH:mm:ss"
         accesskey="d" />
       <div class="tasks-modal-parsed-date">
         📅
-        <input class="tasks-modal-date-editor-picker" type="date" id="date-editor-picker" tabindex="-1" />
+        <span class="tasks-modal-date-time-pickers">
+          <input
+            class="tasks-modal-date-editor-picker"
+            type="date"
+            id="date-editor-picker"
+            title="Pick date"
+            aria-label="Pick date"
+            tabindex="-1" />
+          <input
+            class="tasks-modal-time-editor-picker"
+            type="time"
+            step="1"
+            id="time-editor-picker"
+            title="Pick time, HH:mm:ss"
+            aria-label="Pick time, HH:mm:ss"
+            tabindex="-1" />
+        </span>
       </div>
       <label for="scheduled">
         <span class="accesskey">S</span>
@@ -106,7 +122,7 @@
         id="scheduled"
         type="text"
         class="tasks-modal-date-input tasks-modal-error"
-        placeholder="Try 'Mon' or 'tm' then space"
+        placeholder="Try 'Mon', 'tm ' or YYYY-MM-DD HH:mm:ss"
         accesskey="s" />
       <code class="tasks-modal-parsed-date">
         ⏳
@@ -121,11 +137,27 @@
         id="start"
         type="text"
         class="tasks-modal-date-input"
-        placeholder="Try 'Mon' or 'tm' then space"
+        placeholder="Try 'Mon', 'tm ' or YYYY-MM-DD HH:mm:ss"
         accesskey="a" />
       <div class="tasks-modal-parsed-date">
         🛫
-        <input class="tasks-modal-date-editor-picker" type="date" id="date-editor-picker" tabindex="-1" />
+        <span class="tasks-modal-date-time-pickers">
+          <input
+            class="tasks-modal-date-editor-picker"
+            type="date"
+            id="date-editor-picker"
+            title="Pick date"
+            aria-label="Pick date"
+            tabindex="-1" />
+          <input
+            class="tasks-modal-time-editor-picker"
+            type="time"
+            step="1"
+            id="time-editor-picker"
+            title="Pick time, HH:mm:ss"
+            aria-label="Pick time, HH:mm:ss"
+            tabindex="-1" />
+        </span>
       </div>
       <div class="future-dates-only" id="only-future-dates">
         <label for="forwardOnly">
@@ -219,11 +251,27 @@
         id="created"
         type="text"
         class="tasks-modal-date-input"
-        placeholder="Try 'Mon' or 'tm' then space"
+        placeholder="Try 'Mon', 'tm ' or YYYY-MM-DD HH:mm:ss"
         accesskey="c" />
       <div class="tasks-modal-parsed-date">
         ➕
-        <input class="tasks-modal-date-editor-picker" type="date" id="date-editor-picker" tabindex="-1" />
+        <span class="tasks-modal-date-time-pickers">
+          <input
+            class="tasks-modal-date-editor-picker"
+            type="date"
+            id="date-editor-picker"
+            title="Pick date"
+            aria-label="Pick date"
+            tabindex="-1" />
+          <input
+            class="tasks-modal-time-editor-picker"
+            type="time"
+            step="1"
+            id="time-editor-picker"
+            title="Pick time, HH:mm:ss"
+            aria-label="Pick time, HH:mm:ss"
+            tabindex="-1" />
+        </span>
       </div>
       <label for="done">
         Done (
@@ -234,11 +282,27 @@
         id="done"
         type="text"
         class="tasks-modal-date-input"
-        placeholder="Try 'Mon' or 'tm' then space"
+        placeholder="Try 'Mon', 'tm ' or YYYY-MM-DD HH:mm:ss"
         accesskey="x" />
       <div class="tasks-modal-parsed-date">
         ✅
-        <input class="tasks-modal-date-editor-picker" type="date" id="date-editor-picker" tabindex="-1" />
+        <span class="tasks-modal-date-time-pickers">
+          <input
+            class="tasks-modal-date-editor-picker"
+            type="date"
+            id="date-editor-picker"
+            title="Pick date"
+            aria-label="Pick date"
+            tabindex="-1" />
+          <input
+            class="tasks-modal-time-editor-picker"
+            type="time"
+            step="1"
+            id="time-editor-picker"
+            title="Pick time, HH:mm:ss"
+            aria-label="Pick time, HH:mm:ss"
+            tabindex="-1" />
+        </span>
       </div>
       <label for="cancelled">
         Cancelled (
@@ -249,11 +313,27 @@
         id="cancelled"
         type="text"
         class="tasks-modal-date-input"
-        placeholder="Try 'Mon' or 'tm' then space"
+        placeholder="Try 'Mon', 'tm ' or YYYY-MM-DD HH:mm:ss"
         accesskey="-" />
       <div class="tasks-modal-parsed-date">
         ❌
-        <input class="tasks-modal-date-editor-picker" type="date" id="date-editor-picker" tabindex="-1" />
+        <span class="tasks-modal-date-time-pickers">
+          <input
+            class="tasks-modal-date-editor-picker"
+            type="date"
+            id="date-editor-picker"
+            title="Pick date"
+            aria-label="Pick date"
+            tabindex="-1" />
+          <input
+            class="tasks-modal-time-editor-picker"
+            type="time"
+            step="1"
+            id="time-editor-picker"
+            title="Pick time, HH:mm:ss"
+            aria-label="Pick time, HH:mm:ss"
+            tabindex="-1" />
+        </span>
       </div>
     </section>
     <section class="tasks-modal-button-section">

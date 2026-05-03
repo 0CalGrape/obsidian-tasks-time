@@ -10,6 +10,7 @@ import { PriorityTools } from '../lib/PriorityTools';
 import { logging } from '../lib/logging';
 import { logEndOfTaskEdit, logStartOfTaskEdit } from '../lib/LogTasksHelper';
 import { DateFallback } from '../DateTime/DateFallback';
+import { getCurrentDateWithDailyStart } from '../DateTime/DailyStart';
 import { ListItem } from './ListItem';
 import type { Occurrence } from './Occurrence';
 import { Urgency } from './Urgency';
@@ -378,7 +379,7 @@ export class Task extends ListItem {
      *                However, any created date on a new recurrence is, for now, calculated from the
      *                actual current date, rather than this parameter.
      */
-    public handleNewStatus(newStatus: Status, today = window.moment()): Task[] {
+    public handleNewStatus(newStatus: Status, today = getCurrentDateWithDailyStart()): Task[] {
         if (newStatus.identicalTo(this.status)) {
             // There is no need to create a new Task object if the new status behaviour is identical to the current one.
             return [this];
@@ -405,14 +406,15 @@ export class Task extends ListItem {
 
         const newStatusIsNotDone = !newStatus.isCompleted();
         const oldStatusWasDone = this.status.isCompleted();
-        const noRecurrenceRule = this.recurrence === null;
+        const recurrence = this.recurrence;
+        const noRecurrenceRule = recurrence === null;
 
         const noNewRecurrence = newStatusIsNotDone || oldStatusWasDone || noRecurrenceRule;
         if (noNewRecurrence) {
             return [toggledTask];
         }
 
-        const nextOccurrence = this.recurrence.next(today);
+        const nextOccurrence = recurrence.next(today);
         if (nextOccurrence === null) {
             return [toggledTask];
         }
@@ -454,7 +456,7 @@ export class Task extends ListItem {
         const { setCreatedDate } = getSettings();
         let createdDate: moment.Moment | null = null;
         if (setCreatedDate) {
-            createdDate = window.moment();
+            createdDate = getCurrentDateWithDailyStart();
         }
         // In case the task being toggled was previously cancelled, ensure the new task has no cancelled date:
         const cancelledDate = null;
@@ -506,7 +508,7 @@ export class Task extends ListItem {
         return this.putRecurrenceInUsersOrder(newTasks);
     }
 
-    public handleNewStatusWithRecurrenceInUsersOrder(newStatus: Status, today = window.moment()): Task[] {
+    public handleNewStatusWithRecurrenceInUsersOrder(newStatus: Status, today = getCurrentDateWithDailyStart()): Task[] {
         const logger = logging.getLogger('tasks.Task');
         logger.debug(
             `changed task ${this.taskLocation.path} ${this.taskLocation.lineNumber} ${this.originalMarkdown} status to '${newStatus.symbol}'`,

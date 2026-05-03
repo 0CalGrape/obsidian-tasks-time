@@ -27,18 +27,27 @@ function testDatePickerValue(container: HTMLElement, expectedValue: string) {
     expect(datePicker.value).toEqual(expectedValue);
 }
 
+function testTimePickerValue(container: HTMLElement, expectedValue: string) {
+    const timePicker = getAndCheckRenderedElement<HTMLInputElement>(container, 'time-editor-picker');
+    expect(timePicker.value).toEqual(expectedValue);
+}
+
 async function testTypingInput(
     {
         userTyped,
         expectedLeftText,
         expectedRightText,
         expectedReturnedDate,
+        expectedDatePickerValue = expectedRightText,
+        expectedTimePickerValue = '',
         expectedReturnedDateValidity = 'true',
     }: {
         userTyped: string;
         expectedLeftText: string;
         expectedRightText: string;
         expectedReturnedDate: string;
+        expectedDatePickerValue?: string;
+        expectedTimePickerValue?: string;
         expectedReturnedDateValidity?: 'true' | 'false';
     },
     { forwardOnly }: { forwardOnly: boolean } = { forwardOnly: true },
@@ -54,10 +63,13 @@ async function testTypingInput(
     testInputValue(container, 'parsedDateValidFromDateEditor', expectedReturnedDateValidity);
 
     if (expectedReturnedDateValidity === 'true') {
-        testDatePickerValue(container, expectedRightText);
+        testDatePickerValue(container, expectedDatePickerValue);
+        testTimePickerValue(container, expectedTimePickerValue);
     } else {
         const datePicker = container.ownerDocument.getElementById('date-editor-picker') as HTMLInputElement;
+        const timePicker = container.ownerDocument.getElementById('time-editor-picker') as HTMLInputElement;
         expect(datePicker).toBeNull();
+        expect(timePicker).toBeNull();
     }
 }
 
@@ -79,6 +91,7 @@ describe('date editor wrapper tests', () => {
         testInputValue(container, 'dueDateFromDateEditor', '');
 
         testDatePickerValue(container, '');
+        testTimePickerValue(container, '');
     });
 
     it('should replace an empty date field with typed date value', async () => {
@@ -87,6 +100,17 @@ describe('date editor wrapper tests', () => {
             expectedLeftText: '2024-10-01',
             expectedRightText: '2024-10-01',
             expectedReturnedDate: '2024-10-01',
+        });
+    });
+
+    it('should show a typed date and time to the second', async () => {
+        await testTypingInput({
+            userTyped: '2024-10-01 12:34:56',
+            expectedLeftText: '2024-10-01 12:34:56',
+            expectedRightText: '2024-10-01 12:34:56',
+            expectedReturnedDate: '2024-10-01 12:34:56',
+            expectedDatePickerValue: '2024-10-01',
+            expectedTimePickerValue: '12:34:56',
         });
     });
 
@@ -137,7 +161,7 @@ describe('date editor wrapper tests', () => {
         const container = renderDateEditorWrapper({ forwardOnly: false });
         const datePicker = getAndCheckRenderedElement<HTMLInputElement>(container, 'date-editor-picker');
 
-        await fireEvent.input(datePicker, { target: { value: '2024-11-03' } });
+        await fireEvent.change(datePicker, { target: { value: '2024-11-03' } });
 
         expect(datePicker.value).toEqual('2024-11-03');
 
@@ -145,5 +169,47 @@ describe('date editor wrapper tests', () => {
         testInputValue(container, 'parsedDateFromDateEditor', '2024-11-03');
         testInputValue(container, 'dueDateFromDateEditor', '2024-11-03');
         testInputValue(container, 'parsedDateValidFromDateEditor', 'true');
+    });
+
+    it('should pick a time after picking a date', async () => {
+        const container = renderDateEditorWrapper({ forwardOnly: false });
+        const datePicker = getAndCheckRenderedElement<HTMLInputElement>(container, 'date-editor-picker');
+        const timePicker = getAndCheckRenderedElement<HTMLInputElement>(container, 'time-editor-picker');
+
+        await fireEvent.change(datePicker, { target: { value: '2024-11-03' } });
+        await fireEvent.change(timePicker, { target: { value: '12:34:56' } });
+
+        testInputValue(container, 'due', '2024-11-03 12:34:56');
+        testInputValue(container, 'parsedDateFromDateEditor', '2024-11-03 12:34:56');
+        testInputValue(container, 'dueDateFromDateEditor', '2024-11-03 12:34:56');
+        testInputValue(container, 'parsedDateValidFromDateEditor', 'true');
+        testDatePickerValue(container, '2024-11-03');
+        testTimePickerValue(container, '12:34:56');
+    });
+
+    it('should keep the picked time when changing the picked date', async () => {
+        const container = renderDateEditorWrapper({ forwardOnly: false });
+        const dueDateInput = getAndCheckRenderedElement<HTMLInputElement>(container, 'due');
+        const datePicker = getAndCheckRenderedElement<HTMLInputElement>(container, 'date-editor-picker');
+
+        await fireEvent.input(dueDateInput, { target: { value: '2024-11-03 12:34:56' } });
+        await fireEvent.change(datePicker, { target: { value: '2024-11-04' } });
+
+        testInputValue(container, 'due', '2024-11-04 12:34:56');
+        testDatePickerValue(container, '2024-11-04');
+        testTimePickerValue(container, '12:34:56');
+    });
+
+    it('should not clear the time when the date picker emits input without a confirmed change', async () => {
+        const container = renderDateEditorWrapper({ forwardOnly: false });
+        const dueDateInput = getAndCheckRenderedElement<HTMLInputElement>(container, 'due');
+        const datePicker = getAndCheckRenderedElement<HTMLInputElement>(container, 'date-editor-picker');
+
+        await fireEvent.input(dueDateInput, { target: { value: '2024-11-03 12:34:56' } });
+        await fireEvent.input(datePicker, { target: { value: '2024-11-03' } });
+
+        testInputValue(container, 'due', '2024-11-03 12:34:56');
+        testInputValue(container, 'parsedDateFromDateEditor', '2024-11-03 12:34:56');
+        testInputValue(container, 'dueDateFromDateEditor', '2024-11-03 12:34:56');
     });
 });

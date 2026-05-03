@@ -7,8 +7,8 @@ For this markdown line:
 The first suggestion is:
 {
     "suggestionType": "match",
-    "displayText": "today (2022-07-11)",
-    "appendText": "📅 2022-07-11 ",
+    "displayText": "now (2022-07-11 15:00:01)",
+    "appendText": "📅 2022-07-11 15:00:01 ",
     "insertAt": 16,
     "insertSkip": 2
 }

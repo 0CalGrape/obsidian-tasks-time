@@ -128,6 +128,16 @@ filter by function task.due.moment?.isSame(moment('2023-05-31'), 'day') || false
 - Find all tasks due on 31 May 2023.
 
 ```javascript
+filter by function task.status.type === 'DONE' && task.done.isSameDayWithDailyStart('2026-05-03')
+```
+
+- Find all tasks completed during the business day labelled 3 May 2026.
+- If daily start time is `04:00`, this matches tasks completed from `2026-05-03 04:00:00` up to, but not including, `2026-05-04 04:00:00`.
+- To use an explicit daily start time instead of the setting, pass it as the second argument, for example `task.done.isSameDayWithDailyStart('2026-05-03', '04:00')`.
+- If you already have a `Moment` value, the helper is also available there, for example `task.done.moment?.isSameDayWithDailyStart(moment('2026-05-03'), 'day') || false`.
+- The configured value is also available as `query.dailyStartTime`.
+
+```javascript
 filter by function task.due.moment?.isSame(moment('2023-05-31'), 'week') || false
 ```
 

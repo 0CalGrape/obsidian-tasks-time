@@ -1,4 +1,5 @@
-import * as chrono from 'chrono-node';
+import { DateParser } from './DateParser';
+import { formatAsDateOrDateTime, parseExactDateOrDateTime } from './DateTimeFormat';
 
 export function compareByDate(a: moment.Moment | null, b: moment.Moment | null): -1 | 0 | 1 {
     if (a !== null && b === null) {
@@ -56,11 +57,15 @@ function parseTypedDateForDisplay(
     if (!typedDate) {
         return `<i>no ${fieldName} date</i>`;
     }
-    const parsed = chrono.parseDate(typedDate, forwardDate, {
-        forwardDate: forwardDate != undefined,
-    });
-    if (parsed !== null) {
-        return window.moment(parsed).format('YYYY-MM-DD');
+
+    const exactDate = parseExactDateOrDateTime(typedDate);
+    if (exactDate.isValid()) {
+        return formatAsDateOrDateTime(exactDate);
+    }
+
+    const parsed = DateParser.parseDate(typedDate, forwardDate != undefined, { useDailyStart: false });
+    if (parsed.isValid()) {
+        return formatAsDateOrDateTime(parsed);
     }
     return `<i>invalid ${fieldName} date</i>`;
 }
@@ -86,10 +91,11 @@ export function parseTypedDateForDisplayUsingFutureDate(
  * @param forwardDate
  */
 export function parseTypedDateForSaving(typedDate: string, forwardDate: boolean): moment.Moment | null {
-    let date: moment.Moment | null = null;
-    const parsedDate = chrono.parseDate(typedDate, new Date(), { forwardDate });
-    if (parsedDate !== null) {
-        date = window.moment(parsedDate);
+    const exactDate = typedDate.includes(':') ? parseExactDateOrDateTime(typedDate) : null;
+    if (exactDate?.isValid()) {
+        return exactDate;
     }
-    return date;
+
+    const date = DateParser.parseDate(typedDate, forwardDate);
+    return date.isValid() ? date : null;
 }

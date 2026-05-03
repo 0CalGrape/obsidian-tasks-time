@@ -1,4 +1,5 @@
 import { getSettings } from '../Config/Settings';
+import { getDailyStartTime } from '../DateTime/DailyStart';
 import type { Task } from '../Task/Task';
 import type { PresetsMap } from '../Query/Presets/Presets';
 import type { TasksFile } from './TasksFile';
@@ -24,6 +25,7 @@ export interface QueryContext {
     query: {
         file: TasksFile;
         allTasks: Readonly<Task[]>;
+        dailyStartTime: string;
         searchCache: Record<string, any>; // Added caching capability
     };
     preset: PresetsMap;
@@ -58,6 +60,7 @@ export function makeQueryContextWithTasks(tasksFile: TasksFile, allTasks: Readon
         query: {
             file: tasksFile,
             allTasks: allTasks,
+            dailyStartTime: getDailyStartTime(),
             searchCache: {}, // Added for caching
         },
         preset: { ...getSettings().presets },

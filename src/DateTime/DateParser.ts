@@ -1,17 +1,30 @@
 import * as chrono from 'chrono-node';
 import type { Moment } from 'moment';
 import { DateRange } from './DateRange';
+import { getCurrentDateWithDailyStart } from './DailyStart';
+
+interface ParseDateOptions {
+    useDailyStart?: boolean;
+}
 
 export class DateParser {
-    public static parseDate(input: string, forwardDate: boolean = false): Moment {
-        // Using start of day to correctly match on comparison with other dates (like equality).
-        return window
-            .moment(
-                chrono.parseDate(input, undefined, {
-                    forwardDate: forwardDate,
-                }),
-            )
-            .startOf('day');
+    public static parseDate(input: string, forwardDate: boolean = false, options: ParseDateOptions = {}): Moment {
+        const referenceDate = options.useDailyStart === false ? undefined : getCurrentDateWithDailyStart().toDate();
+        const result = chrono.parse(input, referenceDate, {
+            forwardDate: forwardDate,
+        });
+
+        if (result.length === 0) {
+            return window.moment(null);
+        }
+
+        const parsedDate = window.moment(result[0].start.date());
+        const parsedTime =
+            result[0].start.isCertain('hour') ||
+            result[0].start.isCertain('minute') ||
+            result[0].start.isCertain('second');
+
+        return parsedTime ? parsedDate : parsedDate.startOf('day');
     }
 
     /**

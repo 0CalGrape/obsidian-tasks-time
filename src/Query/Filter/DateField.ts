@@ -79,7 +79,7 @@ export abstract class DateField extends Field {
         // This is needed to keep 'due in two weeks' working, as 'two weeks' is not actually a valid date range
         // if the futureDates value passed in to chrono's parsing functions is false.
         if (!fieldDates.isValid()) {
-            const date = DateParser.parseDate(keywordAndDateString);
+            const date = DateParser.parseDate(keywordAndDateString, false, { useDailyStart: false });
             if (date.isValid()) {
                 fieldDates = new DateRange(date, date);
             }

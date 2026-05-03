@@ -1,4 +1,5 @@
 import flatpickr from 'flatpickr';
+import type { Moment } from 'moment';
 import type { Task } from '../../Task/Task';
 import { RemoveTaskDate, SetTaskDate } from '../EditInstructions/DateInstructions';
 import type { AllTaskDateFields } from '../../DateTime/DateFieldTypes';
@@ -18,6 +19,7 @@ export function promptForDate(
     taskSaver: TaskSaver,
 ) {
     const currentValue = task[dateFieldToEdit];
+    let dateWasSelected = false;
     // TODO figure out how Today's date is determined: if Obsidian is left
     //      running overnight, the flatpickr modal shows the previous day as Today.
     const fp = flatpickr(parentElement, {
@@ -30,9 +32,12 @@ export function promptForDate(
             // if unavailable
             firstDayOfWeek: (new Intl.Locale(navigator.language) as any).weekInfo?.firstDay ?? 1,
         },
+        onChange: () => {
+            dateWasSelected = true;
+        },
         onClose: async (selectedDates, _dateStr, instance) => {
-            if (selectedDates.length > 0) {
-                const date = selectedDates[0];
+            if (dateWasSelected && selectedDates.length > 0) {
+                const date = mergeDateWithExistingTime(selectedDates[0], currentValue);
                 const newTask = new SetTaskDate(dateFieldToEdit, date).apply(task);
                 await taskSaver(task, newTask);
             }
@@ -52,7 +57,7 @@ export function promptForDate(
 
             // Create "Today" button
             addButton(buttonContainer, instance, task, taskSaver, 'Today', () => {
-                const today = new Date();
+                const today = mergeDateWithExistingTime(new Date(), currentValue);
                 return new SetTaskDate(dateFieldToEdit, today).apply(task);
             });
 
@@ -64,6 +69,19 @@ export function promptForDate(
 
     // Open the calendar programmatically
     fp.open();
+}
+
+export function mergeDateWithExistingTime(selectedDate: Date, currentValue: Moment | null): Date {
+    const mergedDate = window.moment(selectedDate);
+    if (currentValue) {
+        mergedDate
+            .hour(currentValue.hour())
+            .minute(currentValue.minute())
+            .second(currentValue.second())
+            .millisecond(currentValue.millisecond());
+    }
+
+    return mergedDate.toDate();
 }
 
 function addButton(

@@ -67,6 +67,7 @@ This page documents all the available pieces of information in Queries that you 
 | Field | Type | Example |
 | ----- | ----- | ----- |
 | `query.allTasks` | `Task[]` | `[... an array with all the Tasks-tracked tasks in the vault ...]` |
+| `query.dailyStartTime` | `string` | `'04:00'` |
 
 <!-- placeholder to force blank line after included text --><!-- endInclude -->
 
@@ -75,6 +76,7 @@ This page documents all the available pieces of information in Queries that you 
     - The [[Global Query|global query]] does not affect `query.allTasks`: all tasks tracked by the Tasks plugin are included.
     - See [[Task Properties]] for the available properties on each task.
     - `query.allTasks` was added in Tasks 6.1.0.
+1. `query.dailyStartTime` provides the configured daily start time, such as `04:00` or `04:00:00`, for custom scripts that need to calculate business days.
 
 ## Related Pages
 

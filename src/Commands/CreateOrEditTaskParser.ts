@@ -9,10 +9,11 @@ import { getSettings } from '../Config/Settings';
 import { GlobalFilter } from '../Config/GlobalFilter';
 import { Priority } from '../Task/Priority';
 import { TaskRegularExpressions } from '../Task/TaskRegularExpressions';
+import { getCurrentDateWithDailyStart } from '../DateTime/DailyStart';
 
 function getDefaultCreatedDate() {
     const { setCreatedDate } = getSettings();
-    return setCreatedDate ? window.moment() : null;
+    return setCreatedDate ? getCurrentDateWithDailyStart() : null;
 }
 
 function shouldUpdateCreatedDateForTask(task: Task) {

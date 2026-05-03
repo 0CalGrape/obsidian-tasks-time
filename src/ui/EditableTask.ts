@@ -1,4 +1,5 @@
 import { GlobalFilter } from '../Config/GlobalFilter';
+import { getCurrentDateWithDailyStart } from '../DateTime/DailyStart';
 import { parseTypedDateForSaving } from '../DateTime/DateTools';
 import { PriorityTools } from '../lib/PriorityTools';
 import { replaceTaskWithTasks } from '../Obsidian/File';
@@ -124,12 +125,12 @@ export class EditableTask {
             priority,
             recurrenceRule: task.recurrence ? task.recurrence.toText() : '',
             onCompletion: task.onCompletion,
-            createdDate: task.created.formatAsDate(),
-            startDate: task.start.formatAsDate(),
-            scheduledDate: task.scheduled.formatAsDate(),
-            dueDate: task.due.formatAsDate(),
-            doneDate: task.done.formatAsDate(),
-            cancelledDate: task.cancelled.formatAsDate(),
+            createdDate: task.created.formatAsDateOrDateTime(),
+            startDate: task.start.formatAsDateOrDateTime(),
+            scheduledDate: task.scheduled.formatAsDateOrDateTime(),
+            dueDate: task.due.formatAsDateOrDateTime(),
+            doneDate: task.done.formatAsDateOrDateTime(),
+            cancelledDate: task.cancelled.formatAsDateOrDateTime(),
             forwardOnly: true,
             blockedBy: blockedBy,
             blocking: originalBlocking,
@@ -252,7 +253,7 @@ export class EditableTask {
         }
 
         // Otherwise, use the current date.
-        return window.moment();
+        return getCurrentDateWithDailyStart();
     }
 
     public parseAndValidateRecurrence() {

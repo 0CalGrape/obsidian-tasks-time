@@ -108,15 +108,19 @@
     "changeRequiresRestart": "REQUIRES RESTART.",
     "dates": {
       "cancelledDate": {
-        "description": "Enabling this will add a timestamp ❌ YYYY-MM-DD at the end when a task is toggled to cancelled.",
+        "description": "Enabling this will add a timestamp ❌ YYYY-MM-DD HH:mm:ss at the end when a task is toggled to cancelled.",
         "name": "Set cancelled date on every cancelled task"
       },
       "createdDate": {
-        "description": "Enabling this will add a timestamp ➕ YYYY-MM-DD before other date values, when a task is created with 'Create or edit task', or by completing a recurring task.",
+        "description": "Enabling this will add a timestamp ➕ YYYY-MM-DD HH:mm:ss before other date values, when a task is created with 'Create or edit task', or by completing a recurring task.",
         "name": "Set created date on every added task"
       },
+      "dailyStartTime": {
+        "description": "Time when a new day starts for relative dates and automatic timestamps. Supports HH:mm or HH:mm:ss. Before this time, today is treated as the previous date.",
+        "name": "Start of day"
+      },
       "doneDate": {
-        "description": "Enabling this will add a timestamp ✅ YYYY-MM-DD at the end when a task is toggled to done.",
+        "description": "Enabling this will add a timestamp ✅ YYYY-MM-DD HH:mm:ss at the end when a task is toggled to done.",
         "name": "Set done date on every completed task"
       },
       "heading": "Dates"

@@ -334,10 +334,10 @@ describe('Task editing', () => {
     });
 
     describe('Status editing', () => {
-        const today = '2024-02-29';
+        const now = '2024-02-29 12:00:00';
         beforeAll(() => {
             jest.useFakeTimers();
-            jest.setSystemTime(new Date(today));
+            jest.setSystemTime(new Date(2024, 1, 29, 12, 0, 0));
         });
 
         afterAll(() => {
@@ -353,10 +353,12 @@ describe('Task editing', () => {
                 '- [ ] expecting done date to be added',
                 'x',
             );
-            expect(getElementValue(container, 'done')).toEqual(today);
+            expect(getElementValue(container, 'done')).toEqual(now);
 
             submit.click();
-            expect(await waitForClose).toMatchInlineSnapshot('"- [x] expecting done date to be added ✅ 2024-02-29"');
+            expect(await waitForClose).toMatchInlineSnapshot(
+                '"- [x] expecting done date to be added ✅ 2024-02-29 12:00:00"',
+            );
         });
 
         it('should change status to Done and keep doneDate', async () => {
@@ -386,11 +388,11 @@ describe('Task editing', () => {
                 '- [ ] expecting cancelled date to be added',
                 '-',
             );
-            expect(getElementValue(container, 'cancelled')).toEqual(today);
+            expect(getElementValue(container, 'cancelled')).toEqual(now);
 
             submit.click();
             expect(await waitForClose).toMatchInlineSnapshot(
-                '"- [-] expecting cancelled date to be added ❌ 2024-02-29"',
+                '"- [-] expecting cancelled date to be added ❌ 2024-02-29 12:00:00"',
             );
         });
 
@@ -493,7 +495,7 @@ describe('Task editing', () => {
             submit.click();
             expect(await waitForClose).toMatchInlineSnapshot(`
                 "- [ ] Recurring 🔁 every day 📅 2024-02-18
-                - [x] Recurring 🔁 every day 📅 2024-02-17 ✅ 2024-02-29"
+                - [x] Recurring 🔁 every day 📅 2024-02-17 ✅ 2024-02-29 12:00:00"
             `);
         });
 
@@ -506,7 +508,7 @@ describe('Task editing', () => {
 
             submit.click();
             expect(await waitForClose).toMatchInlineSnapshot(`
-                "- [x] Recurring 🔁 every day 📅 2024-02-17 ✅ 2024-02-29
+                "- [x] Recurring 🔁 every day 📅 2024-02-17 ✅ 2024-02-29 12:00:00
                 - [ ] Recurring 🔁 every day 📅 2024-02-18"
             `);
         });
@@ -521,8 +523,8 @@ describe('Task editing', () => {
 
             submit.click();
             expect(await waitForClose).toMatchInlineSnapshot(`
-                "- [ ] Recurring 🔁 every day when done ➕ 2024-02-29 📅 2024-03-01
-                - [x] Recurring 🔁 every day when done 📅 2024-02-17 ✅ 2024-02-29"
+                "- [ ] Recurring 🔁 every day when done ➕ 2024-02-29 12:00:00 📅 2024-03-01
+                - [x] Recurring 🔁 every day when done 📅 2024-02-17 ✅ 2024-02-29 12:00:00"
             `);
         });
 
@@ -539,7 +541,7 @@ describe('Task editing', () => {
 
             submit.click();
             expect(await waitForClose).toMatchInlineSnapshot(`
-                "- [ ] Recurring 🔁 every day when done ➕ 2024-02-29 📅 2024-02-24
+                "- [ ] Recurring 🔁 every day when done ➕ 2024-02-29 12:00:00 📅 2024-02-24
                 - [x] Recurring 🔁 every day when done 📅 2024-02-17 ✅ 2024-02-23"
             `);
         });
@@ -548,7 +550,7 @@ describe('Task editing', () => {
     describe('Date editing', () => {
         beforeEach(() => {
             jest.useFakeTimers();
-            jest.setSystemTime(new Date('2024-11-27'));
+            jest.setSystemTime(new Date(2024, 10, 27, 12, 0, 0));
         });
 
         afterEach(() => {
@@ -617,7 +619,7 @@ describe('Task editing', () => {
 describe('Exhaustive editing', () => {
     beforeEach(() => {
         jest.useFakeTimers();
-        jest.setSystemTime(new Date('2023-07-18'));
+        jest.setSystemTime(new Date(2023, 6, 18, 12, 0, 0));
     });
 
     afterEach(() => {

@@ -10,7 +10,7 @@
 | 🔺 highest priority | 🔺  |
 | ⏬ lowest priority | ⏬  |
 | 🔁 recurring (repeat) | 🔁  |
-| ➕ created today (2022-07-11) | ➕ 2022-07-11  |
+| ➕ created now (2022-07-11 15:00:01) | ➕ 2022-07-11 15:00:01  |
 | 🆔 id | 🆔  |
 | ⛔ depends on id | ⛔  |
 | 🏁 on completion | 🏁  |
@@ -27,6 +27,7 @@
 | every week on Thursday | 🔁 every week on Thursday  |
 | every week on Friday | 🔁 every week on Friday  |
 | every week on Saturday | 🔁 every week on Saturday  |
+| now (2022-07-11 15:00:01) | 📅 2022-07-11 15:00:01  |
 | today (2022-07-11) | 📅 2022-07-11  |
 | tomorrow (2022-07-12) | 📅 2022-07-12  |
 | Sunday (2022-07-17) | 📅 2022-07-17  |
@@ -39,6 +40,7 @@
 | next week (2022-07-18) | 📅 2022-07-18  |
 | next month (2022-08-11) | 📅 2022-08-11  |
 | next year (2023-07-11) | 📅 2023-07-11  |
+| now (2022-07-11 15:00:01) | ⏳ 2022-07-11 15:00:01  |
 | today (2022-07-11) | ⏳ 2022-07-11  |
 | tomorrow (2022-07-12) | ⏳ 2022-07-12  |
 | Sunday (2022-07-17) | ⏳ 2022-07-17  |
@@ -51,6 +53,7 @@
 | next week (2022-07-18) | ⏳ 2022-07-18  |
 | next month (2022-08-11) | ⏳ 2022-08-11  |
 | next year (2023-07-11) | ⏳ 2023-07-11  |
+| now (2022-07-11 15:00:01) | 🛫 2022-07-11 15:00:01  |
 | today (2022-07-11) | 🛫 2022-07-11  |
 | tomorrow (2022-07-12) | 🛫 2022-07-12  |
 | Sunday (2022-07-17) | 🛫 2022-07-17  |

@@ -213,13 +213,11 @@ function addTaskLifecycleDateSuggestions(
 ) {
     // This will eventually also support Done and Cancelled dates
     if (!parameters.line.includes(symbols.createdDateSymbol)) {
-        const parsedDate = DateParser.parseDate('today', true);
-        const formattedDate = parsedDate.format(TaskRegularExpressions.dateFormat);
+        const formattedDateTime = formatNowAsDateTime();
         genericSuggestions.push({
-            // We don't want this to match when the user types "today"
-            textToMatch: `${symbols.createdDateSymbol} created`,
-            displayText: `${symbols.createdDateSymbol} created today (${formattedDate})`,
-            appendText: `${symbols.createdDateSymbol} ${formattedDate}` + parameters.postfix,
+            textToMatch: `${symbols.createdDateSymbol} created now`,
+            displayText: `${symbols.createdDateSymbol} created now (${formattedDateTime})`,
+            appendText: `${symbols.createdDateSymbol} ${formattedDateTime}` + parameters.postfix,
             insertSkip: parameters.dataviewMode ? parameters.insertSkip : undefined,
         });
     }
@@ -265,11 +263,20 @@ function defaultExtractor(symbol: string, suggestionText: any) {
 }
 
 function dateExtractor(symbol: string, date: string) {
-    const parsedDate = DateParser.parseDate(date, true);
-    const formattedDate = `${parsedDate.format(TaskRegularExpressions.dateFormat)}`;
+    const formattedDate = isNowSuggestion(date)
+        ? formatNowAsDateTime()
+        : `${DateParser.parseDate(date, true).format(TaskRegularExpressions.dateFormat)}`;
     const displayText = `${date} (${formattedDate})`;
     const appendText = `${symbol} ${formattedDate}`;
     return { displayText, appendText };
+}
+
+function isNowSuggestion(date: string) {
+    return date.toLowerCase() === 'now';
+}
+
+function formatNowAsDateTime() {
+    return window.moment().format(TaskRegularExpressions.dateTimeFormat);
 }
 
 /*
@@ -286,6 +293,7 @@ function addDatesSuggestions(
     parameters: SuggestorParameters,
 ): SuggestInfo[] {
     const genericSuggestions = [
+        'now',
         'today',
         'tomorrow',
         'Sunday',
@@ -313,7 +321,9 @@ function addDatesSuggestions(
         // be in the future, i.e. if today is Sunday and the user typed "due <Enter> Saturday", she
         // most likely means Saturday *in the future* and not yesterday.
         const possibleDate =
-            dateString && dateString.length > 1 ? DateParser.parseDate(doAutocomplete(dateString), true) : null;
+            dateString && dateString.length > 1 && !isNowSuggestion(dateString)
+                ? DateParser.parseDate(doAutocomplete(dateString), true)
+                : null;
         if (possibleDate?.isValid()) {
             // Seems like the text that the user typed can be parsed as a valid date.
             // Present its completed form as a 1st suggestion

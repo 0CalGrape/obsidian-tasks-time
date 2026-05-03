@@ -11,8 +11,11 @@ import { LinkResolver } from '../../src/Task/LinkResolver';
 import { getFirstLinkpathDestFromData } from '../__mocks__/obsidian';
 import { MockDataLoader } from '../TestingTools/MockDataLoader';
 import { addBackticks, determineExpressionType, formatToRepresentType } from './ScriptingTestHelpers';
+import { resetSettings } from '../../src/Config/Settings';
 
-beforeEach(() => {});
+beforeEach(() => {
+    resetSettings();
+});
 
 afterEach(() => {
     LinkResolver.getInstance().resetGetFirstLinkpathDestFn();
@@ -66,6 +69,6 @@ describe('query', () => {
     });
 
     it('search properties', () => {
-        verifyFieldDataForReferenceDocs(['query.allTasks']);
+        verifyFieldDataForReferenceDocs(['query.allTasks', 'query.dailyStartTime']);
     });
 });

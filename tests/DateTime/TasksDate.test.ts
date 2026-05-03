@@ -34,8 +34,59 @@ describe('TasksDate', () => {
         const tasksDate = new TasksDate(moment(date));
         expect(tasksDate.format('dddd')).toEqual('Friday');
         expect(tasksDate.formatAsDate()).toEqual(date);
-        expect(tasksDate.formatAsDateAndTime()).toEqual(date + ' 00:00');
+        expect(tasksDate.formatAsDateAndTime()).toEqual(date + ' 00:00:00');
+        expect(tasksDate.formatAsDateOrDateTime()).toEqual(date);
         expect(tasksDate.toISOString()).toEqual('2023-10-13T00:00:00.000Z');
+    });
+
+    it('should format dates with seconds when they have a time component', () => {
+        const tasksDate = new TasksDate(moment('2023-10-13 12:34:56', 'YYYY-MM-DD HH:mm:ss'));
+        expect(tasksDate.formatAsDateOrDateTime()).toEqual('2023-10-13 12:34:56');
+    });
+
+    it('should match a business day using the daily start time', () => {
+        expect(
+            new TasksDate(moment('2026-05-03 03:59:59', 'YYYY-MM-DD HH:mm:ss')).isSameDayWithDailyStart(
+                '2026-05-02',
+                '04:00',
+            ),
+        ).toEqual(true);
+        expect(
+            new TasksDate(moment('2026-05-03 03:59:59', 'YYYY-MM-DD HH:mm:ss')).isSameDayWithDailyStart(
+                '2026-05-03',
+                '04:00',
+            ),
+        ).toEqual(false);
+        expect(
+            new TasksDate(moment('2026-05-03 04:00:00', 'YYYY-MM-DD HH:mm:ss')).isSameDayWithDailyStart(
+                '2026-05-03',
+                '04:00',
+            ),
+        ).toEqual(true);
+        expect(
+            new TasksDate(moment('2026-05-04 03:59:59', 'YYYY-MM-DD HH:mm:ss')).isSameDayWithDailyStart(
+                '2026-05-03',
+                '04:00',
+            ),
+        ).toEqual(true);
+        expect(
+            new TasksDate(moment('2026-05-04 04:00:00', 'YYYY-MM-DD HH:mm:ss')).isSameDayWithDailyStart(
+                '2026-05-03',
+                '04:00',
+            ),
+        ).toEqual(false);
+    });
+
+    it('should treat date-only values as business day labels', () => {
+        const tasksDate = new TasksDate(moment('2026-05-03', 'YYYY-MM-DD'));
+        expect(tasksDate.isSameDayWithDailyStart('2026-05-03', '04:00')).toEqual(true);
+        expect(tasksDate.isSameDayWithOffset('2026-05-03', '04:00')).toEqual(true);
+    });
+
+    it('should not match missing or invalid dates with daily start', () => {
+        expect(new TasksDate(null).isSameDayWithDailyStart('2026-05-03', '04:00')).toEqual(false);
+        expect(new TasksDate(moment('2026-02-31')).isSameDayWithDailyStart('2026-05-03', '04:00')).toEqual(false);
+        expect(new TasksDate(moment('2026-05-03')).isSameDayWithDailyStart('not a date', '04:00')).toEqual(false);
     });
 
     it('should format null dates as empty string', () => {

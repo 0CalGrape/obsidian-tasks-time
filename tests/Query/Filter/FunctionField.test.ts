@@ -23,6 +23,7 @@ import { Query } from '../../../src/Query/Query';
 import { TasksDate } from '../../../src/DateTime/TasksDate';
 import { Priority } from '../../../src/Task/Priority';
 import { TasksFile } from '../../../src/Scripting/TasksFile';
+import { resetSettings, updateSettings } from '../../../src/Config/Settings';
 
 window.moment = moment;
 
@@ -68,6 +69,42 @@ describe('FunctionField - filtering', () => {
 
         expect(tasksInSameFileAsQuery.filterFunction!(taskInQueryFile, searchInfo)).toEqual(true);
         expect(tasksInSameFileAsQuery.filterFunction!(taskNotInQueryFile, searchInfo)).toEqual(false);
+    });
+
+    it('filter by function - should match done dates by daily start business day', () => {
+        updateSettings({ dailyStartTime: '04:00' });
+        const completedOnBusinessDay = functionField.createFilterOrErrorMessage(
+            'filter by function task.status.type === "DONE" && task.done.isSameDayWithDailyStart("2026-05-03")',
+        );
+        expect(completedOnBusinessDay).toBeValid();
+
+        const beforeStart = new TaskBuilder().status(Status.DONE).doneDate('2026-05-03 03:59:59').build();
+        const atStart = new TaskBuilder().status(Status.DONE).doneDate('2026-05-03 04:00:00').build();
+        const beforeNextStart = new TaskBuilder().status(Status.DONE).doneDate('2026-05-04 03:59:59').build();
+        const atNextStart = new TaskBuilder().status(Status.DONE).doneDate('2026-05-04 04:00:00').build();
+        const notDone = new TaskBuilder().doneDate('2026-05-03 12:00:00').build();
+        const searchInfo = SearchInfo.fromAllTasks([beforeStart, atStart, beforeNextStart, atNextStart, notDone]);
+
+        expect(completedOnBusinessDay.filterFunction!(beforeStart, searchInfo)).toEqual(false);
+        expect(completedOnBusinessDay.filterFunction!(atStart, searchInfo)).toEqual(true);
+        expect(completedOnBusinessDay.filterFunction!(beforeNextStart, searchInfo)).toEqual(true);
+        expect(completedOnBusinessDay.filterFunction!(atNextStart, searchInfo)).toEqual(false);
+        expect(completedOnBusinessDay.filterFunction!(notDone, searchInfo)).toEqual(false);
+    });
+
+    it('filter by function - should support daily start helper on task done moment', () => {
+        updateSettings({ dailyStartTime: '04:00' });
+        const completedOnBusinessDay = functionField.createFilterOrErrorMessage(
+            'filter by function const date = window.moment("2026-05-02", "YYYY-MM-DD"); if (task.status.type === "DONE" && task.done.moment) { return task.done.moment.isSameDayWithDailyStart(date, "day"); } return false;',
+        );
+        expect(completedOnBusinessDay).toBeValid();
+
+        const beforeStart = new TaskBuilder().status(Status.DONE).doneDate('2026-05-03 03:59:59').build();
+        const atStart = new TaskBuilder().status(Status.DONE).doneDate('2026-05-03 04:00:00').build();
+        const searchInfo = SearchInfo.fromAllTasks([beforeStart, atStart]);
+
+        expect(completedOnBusinessDay.filterFunction!(beforeStart, searchInfo)).toEqual(true);
+        expect(completedOnBusinessDay.filterFunction!(atStart, searchInfo)).toEqual(false);
     });
 
     it('filter by function - should report syntax errors via FilterOrErrorMessage', () => {
@@ -445,6 +482,7 @@ The error message was:
 // -----------------------------------------------------------------------------------------------------------------
 
 afterEach(() => {
+    resetSettings();
     jest.useRealTimers();
 });
 

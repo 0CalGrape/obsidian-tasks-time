@@ -41,9 +41,9 @@
     "appendText": "🔁 "
   },
   {
-    "textToMatch": "➕ created",
-    "displayText": "➕ created today (2022-07-11)",
-    "appendText": "➕ 2022-07-11 "
+    "textToMatch": "➕ created now",
+    "displayText": "➕ created now (2022-07-11 15:00:01)",
+    "appendText": "➕ 2022-07-11 15:00:01 "
   },
   {
     "displayText": "🆔 id",

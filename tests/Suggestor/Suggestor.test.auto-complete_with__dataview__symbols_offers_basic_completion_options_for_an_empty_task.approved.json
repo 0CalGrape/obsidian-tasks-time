@@ -41,9 +41,9 @@
     "appendText": "repeat:: "
   },
   {
-    "textToMatch": "created:: created",
-    "displayText": "created:: created today (2022-07-11)",
-    "appendText": "created:: 2022-07-11] ",
+    "textToMatch": "created:: created now",
+    "displayText": "created:: created now (2022-07-11 15:00:01)",
+    "appendText": "created:: 2022-07-11 15:00:01] ",
     "insertSkip": 0
   },
   {

@@ -108,15 +108,19 @@
     "changeRequiresRestart": "需要重启。",
     "dates": {
       "cancelledDate": {
-        "description": "启用此功能将在任务设置为取消时，在其末尾添加时间戳 ❌ YYYY-MM-DD。",
+        "description": "启用此功能将在任务设置为取消时，在其末尾添加时间戳 ❌ YYYY-MM-DD HH:mm:ss。",
         "name": "设置每个已取消的任务的取消日期"
       },
       "createdDate": {
-        "description": "启用此功能将在通过“Create or edit task”命令或完成重复任务时，在其他日期值之前添加时间戳➕YYYY-MM-DD。",
+        "description": "启用此功能将在通过“Create or edit task”命令或完成重复任务时，在其他日期值之前添加时间戳➕YYYY-MM-DD HH:mm:ss。",
         "name": "设置每个已添加任务的创建日期"
       },
+      "dailyStartTime": {
+        "description": "相对日期和自动时间戳使用的一天开始时间。支持 HH:mm 或 HH:mm:ss。在此时间之前，今天会按前一天计算。",
+        "name": "一天开始时间"
+      },
       "doneDate": {
-        "description": "启用此功能将在任务被设置为完成时，在其末尾添加时间戳 ✅ YYYY-MM-DD。",
+        "description": "启用此功能将在任务被设置为完成时，在其末尾添加时间戳 ✅ YYYY-MM-DD HH:mm:ss。",
         "name": "设置每个已完成任务的完成日期"
       },
       "heading": "日期"

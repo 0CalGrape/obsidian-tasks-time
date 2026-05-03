@@ -46,18 +46,18 @@ For more information, including adding your own customised statuses, see [[Statu
 
 | Field | Type 1 | Example 1 | Type 2 | Example 2 |
 | ----- | ----- | ----- | ----- | ----- |
-| `task.created` | `TasksDate` | `2023-07-01 00:00` | `TasksDate` | `` |
-| `task.start` | `TasksDate` | `2023-07-02 00:00` | `TasksDate` | `` |
-| `task.scheduled` | `TasksDate` | `2023-07-03 00:00` | `TasksDate` | `` |
-| `task.due` | `TasksDate` | `2023-07-04 00:00` | `TasksDate` | `` |
-| `task.cancelled` | `TasksDate` | `2023-07-06 00:00` | `TasksDate` | `` |
-| `task.done` | `TasksDate` | `2023-07-05 00:00` | `TasksDate` | `` |
-| `task.happens` | `TasksDate` | `2023-07-02 00:00` | `TasksDate` | `` |
+| `task.created` | `TasksDate` | `2023-07-01 00:00:00` | `TasksDate` | `` |
+| `task.start` | `TasksDate` | `2023-07-02 00:00:00` | `TasksDate` | `` |
+| `task.scheduled` | `TasksDate` | `2023-07-03 00:00:00` | `TasksDate` | `` |
+| `task.due` | `TasksDate` | `2023-07-04 00:00:00` | `TasksDate` | `` |
+| `task.cancelled` | `TasksDate` | `2023-07-06 00:00:00` | `TasksDate` | `` |
+| `task.done` | `TasksDate` | `2023-07-05 00:00:00` | `TasksDate` | `` |
+| `task.happens` | `TasksDate` | `2023-07-02 00:00:00` | `TasksDate` | `` |
 
 <!-- placeholder to force blank line after included text --><!-- endInclude -->
 
 1. Each of these values is a `TasksDate` object. The [[#Values in TasksDate Properties]] section below shows what can be done with them.
-1. Note that currently all stored dates have no time, or rather, their time is midnight at the start of the day, local time.
+1. Dates may be stored as date-only values, or with a time accurate to seconds.
 1. For example uses of date properties, see [[Filters#Due Date]] and [[Grouping#Due Date]].
 1. `task.happens` is the earlier of `task.due`, `task.scheduled` and `task.start`.
 1. `task.cancelled` was added in Tasks 5.5.0.
@@ -68,16 +68,18 @@ For more information, including adding your own customised statuses, see [[Statu
 
 | Field | Type 1 | Example 1 | Type 2 | Example 2 |
 | ----- | ----- | ----- | ----- | ----- |
-| `task.due` | `TasksDate` | `2023-07-04 00:00` | `TasksDate` | `` |
-| `task.due.moment` | `Moment` | `moment('2023-07-04 00:00')` | `null` | `null` |
+| `task.due` | `TasksDate` | `2023-07-04 00:00:00` | `TasksDate` | `` |
+| `task.due.moment` | `Moment` | `moment('2023-07-04 00:00:00')` | `null` | `null` |
 | `task.due.formatAsDate()` | `string` | `'2023-07-04'` | `string` | `''` |
 | `task.due.formatAsDate('no date')` | `string` | `'2023-07-04'` | `string` | `'no date'` |
-| `task.due.formatAsDateAndTime()` | `string` | `'2023-07-04 00:00'` | `string` | `''` |
-| `task.due.formatAsDateAndTime('no date')` | `string` | `'2023-07-04 00:00'` | `string` | `'no date'` |
+| `task.due.formatAsDateAndTime()` | `string` | `'2023-07-04 00:00:00'` | `string` | `''` |
+| `task.due.formatAsDateAndTime('no date')` | `string` | `'2023-07-04 00:00:00'` | `string` | `'no date'` |
 | `task.due.format('dddd')` | `string` | `'Tuesday'` | `string` | `''` |
 | `task.due.format('dddd', 'no date')` | `string` | `'Tuesday'` | `string` | `'no date'` |
 | `task.due.toISOString()` | `string` | `'2023-07-04T00:00:00.000Z'` | `string` | `''` |
 | `task.due.toISOString(true)` | `string` | `'2023-07-04T00:00:00.000+00:00'` | `string` | `''` |
+| `task.due.isSameDayWithDailyStart('2023-07-04')` | `boolean` | `true` | `boolean` | `false` |
+| `task.due.isSameDayWithDailyStart('2023-07-03', '04:00')` | `boolean` | `false` | `boolean` | `false` |
 | `task.due.category.name` | `string` | `'Future'` | `string` | `'Undated'` |
 | `task.due.category.sortOrder` | `number` | `3` | `number` | `4` |
 | `task.due.category.groupText` | `string` | `'%%3%% Future'` [^commented] | `string` | `'%%4%% Undated'` [^commented] |
@@ -95,6 +97,8 @@ For more information, including adding your own customised statuses, see [[Statu
     - an empty string `''` or `""`, meaning 'do not add a heading for tasks missing this date property'.
 1. You can see the current [TasksDate source code](https://github.com/obsidian-tasks-group/obsidian-tasks/blob/main/src/DateTime/TasksDate.ts), to explore its implementation.
 1. `task.due.toISOString(true)` prevents UTC conversion - see the [moment documentation](https://momentjs.com/docs/#/displaying/as-iso-string/)
+1. `task.due.isSameDayWithDailyStart('2023-07-04')` checks whether the date belongs to the given business day, using the configured daily start time. You can pass a second argument such as `'04:00'` or `'04:00:00'` to use an explicit daily start time.
+1. The same business-day helper is also available on `Moment` values returned by `.moment`, for example `task.due.moment?.isSameDayWithDailyStart(moment('2023-07-04'), 'day') || false`.
 1. `category` divides dates in to 5 named groups:
     - `Invalid date`
     - `Overdue`

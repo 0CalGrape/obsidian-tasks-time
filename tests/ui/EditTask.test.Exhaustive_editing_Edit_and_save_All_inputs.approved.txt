@@ -47,31 +47,31 @@ KEY: (globalFilter, set created date)
 
 ('', true)
     '' =>
-    '- [ ] simulate user typing text in to empty description field ➕ 2023-07-18'
+    '- [ ] simulate user typing text in to empty description field ➕ 2023-07-18 12:00:00'
 
 ('', true)
     'plain text, not a list item' =>
-    '- [ ] plain text, not a list item ➕ 2023-07-18'
+    '- [ ] plain text, not a list item ➕ 2023-07-18 12:00:00'
 
 ('', true)
     '-' =>
-    '- [ ] simulate user typing text in to empty description field ➕ 2023-07-18'
+    '- [ ] simulate user typing text in to empty description field ➕ 2023-07-18 12:00:00'
 
 ('', true)
     '- ' =>
-    '- [ ] simulate user typing text in to empty description field ➕ 2023-07-18'
+    '- [ ] simulate user typing text in to empty description field ➕ 2023-07-18 12:00:00'
 
 ('', true)
     '- [ ]' =>
-    '- [ ] simulate user typing text in to empty description field ➕ 2023-07-18'
+    '- [ ] simulate user typing text in to empty description field ➕ 2023-07-18 12:00:00'
 
 ('', true)
     '- [ ] ' =>
-    '- [ ] simulate user typing text in to empty description field ➕ 2023-07-18'
+    '- [ ] simulate user typing text in to empty description field ➕ 2023-07-18 12:00:00'
 
 ('', true)
     '- list item, but no checkbox' =>
-    '- [ ] list item, but no checkbox ➕ 2023-07-18'
+    '- [ ] list item, but no checkbox ➕ 2023-07-18 12:00:00'
 
 ('', true)
     '- [ ] checkbox with initial description' =>
@@ -135,35 +135,35 @@ KEY: (globalFilter, set created date)
 
 ('#task', true)
     '' =>
-    '- [ ] #task simulate user typing text in to empty description field ➕ 2023-07-18'
+    '- [ ] #task simulate user typing text in to empty description field ➕ 2023-07-18 12:00:00'
 
 ('#task', true)
     'plain text, not a list item' =>
-    '- [ ] #task plain text, not a list item ➕ 2023-07-18'
+    '- [ ] #task plain text, not a list item ➕ 2023-07-18 12:00:00'
 
 ('#task', true)
     '-' =>
-    '- [ ] #task simulate user typing text in to empty description field ➕ 2023-07-18'
+    '- [ ] #task simulate user typing text in to empty description field ➕ 2023-07-18 12:00:00'
 
 ('#task', true)
     '- ' =>
-    '- [ ] #task simulate user typing text in to empty description field ➕ 2023-07-18'
+    '- [ ] #task simulate user typing text in to empty description field ➕ 2023-07-18 12:00:00'
 
 ('#task', true)
     '- [ ]' =>
-    '- [ ] #task simulate user typing text in to empty description field ➕ 2023-07-18'
+    '- [ ] #task simulate user typing text in to empty description field ➕ 2023-07-18 12:00:00'
 
 ('#task', true)
     '- [ ] ' =>
-    '- [ ] #task simulate user typing text in to empty description field ➕ 2023-07-18'
+    '- [ ] #task simulate user typing text in to empty description field ➕ 2023-07-18 12:00:00'
 
 ('#task', true)
     '- list item, but no checkbox' =>
-    '- [ ] #task list item, but no checkbox ➕ 2023-07-18'
+    '- [ ] #task list item, but no checkbox ➕ 2023-07-18 12:00:00'
 
 ('#task', true)
     '- [ ] checkbox with initial description' =>
-    '- [ ] #task checkbox with initial description ➕ 2023-07-18'
+    '- [ ] #task checkbox with initial description ➕ 2023-07-18 12:00:00'
 
 ('#task', true)
     '- [ ] checkbox with initial description and created date ➕ 2023-01-01' =>

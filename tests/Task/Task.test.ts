@@ -861,6 +861,29 @@ describe('toggle done', () => {
         expect(toggled.doneDate).toBeNull();
     });
 
+    it('adds a seconds-precision done date when toggling a checkbox', () => {
+        jest.useFakeTimers();
+        jest.setSystemTime(new Date('2026-05-03T12:34:56'));
+
+        const task = new TaskBuilder().build();
+        const tasks = task.toggle();
+
+        expect(tasks.length).toEqual(1);
+        expect(tasks[0].doneDate?.format('YYYY-MM-DD HH:mm:ss')).toEqual('2026-05-03 12:34:56');
+    });
+
+    it('uses the previous date before daily start when toggling a checkbox', () => {
+        jest.useFakeTimers();
+        jest.setSystemTime(new Date('2026-05-03T03:30:15'));
+        updateSettings({ dailyStartTime: '04:00' });
+
+        const task = new TaskBuilder().build();
+        const tasks = task.toggle();
+
+        expect(tasks.length).toEqual(1);
+        expect(tasks[0].doneDate?.format('YYYY-MM-DD HH:mm:ss')).toEqual('2026-05-02 03:30:15');
+    });
+
     type RecurrenceCase = {
         // inputs:
         interval: string;
@@ -1198,7 +1221,7 @@ describe('toggle done', () => {
         } = recurrenceCase;
         if (today) {
             jest.useFakeTimers();
-            jest.setSystemTime(new Date(today));
+            jest.setSystemTime(new Date(`${today}T12:00:00`));
         }
 
         // If this test fails, the RecurrenceCase had no expected new dates set, and so
@@ -1339,7 +1362,7 @@ describe('handle new status', () => {
 
     beforeEach(() => {
         jest.useFakeTimers();
-        jest.setSystemTime(new Date('2023-06-26'));
+        jest.setSystemTime(new Date('2023-06-26T12:00:00'));
         resetSettings();
     });
 
@@ -1422,7 +1445,7 @@ describe('handle new status', () => {
         // Assert
         // 'Created' date of new task is based on today, ignoring the manually set completion date.
         expect(toMarkdown(newTasks)).toMatchInlineSnapshot(`
-            "- [ ] Annual task 🔁 every year when done ➕ 2023-06-26 📅 2024-01-23
+            "- [ ] Annual task 🔁 every year when done ➕ 2023-06-26 12:00:00 📅 2024-01-23
             - [x] Annual task 🔁 every year when done 📅 1989-12-23 ✅ 2023-01-23"
         `);
     });
@@ -1438,7 +1461,7 @@ describe('handle new status', () => {
             const newTasks = doneTask.handleNewStatus(Status.CANCELLED);
 
             // Assert
-            expect(newTasks).toMatchMarkdownLines(['- [-] Stuff 📅 2023-12-15 ❌ 2023-06-26']);
+            expect(newTasks).toMatchMarkdownLines(['- [-] Stuff 📅 2023-12-15 ❌ 2023-06-26 12:00:00']);
         });
 
         it('should not add cancelled date when changing to CANCELLED, if setting disabled', () => {
@@ -1481,7 +1504,7 @@ describe('handle new status', () => {
             // Assert
             expect(newTasks).toMatchMarkdownLines([
                 '- [ ] Stuff 🔁 every day 📅 2023-05-16',
-                '- [x] Stuff 🔁 every day 📅 2023-05-15 ✅ 2023-06-26',
+                '- [x] Stuff 🔁 every day 📅 2023-05-15 ✅ 2023-06-26 12:00:00',
             ]);
         });
     });
@@ -1490,7 +1513,7 @@ describe('handle new status', () => {
 describe('created dates on recurring task', () => {
     beforeEach(() => {
         jest.useFakeTimers();
-        jest.setSystemTime(new Date('2023-03-08'));
+        jest.setSystemTime(new Date('2023-03-08T12:00:00'));
     });
 
     it('should not set created date with disabled setting', () => {
@@ -1501,7 +1524,7 @@ describe('created dates on recurring task', () => {
         // Act
         expect(line).toToggleTo([
             '- [ ] this is a task 🔁 every day 📅 2021-09-13',
-            '- [x] this is a task 🔁 every day 📅 2021-09-12 ✅ 2023-03-08',
+            '- [x] this is a task 🔁 every day 📅 2021-09-12 ✅ 2023-03-08 12:00:00',
         ]);
     });
 
@@ -1513,7 +1536,7 @@ describe('created dates on recurring task', () => {
         // Act
         expect(line).toToggleTo([
             '- [ ] this is a task 🔁 every day 📅 2021-09-13',
-            '- [x] this is a task 🔁 every day ➕ 2021-09-11 📅 2021-09-12 ✅ 2023-03-08',
+            '- [x] this is a task 🔁 every day ➕ 2021-09-11 📅 2021-09-12 ✅ 2023-03-08 12:00:00',
         ]);
     });
 
@@ -1524,8 +1547,8 @@ describe('created dates on recurring task', () => {
 
         // Act
         expect(line).toToggleTo([
-            '- [ ] this is a task 🔁 every day ➕ 2023-03-08 📅 2021-09-13',
-            '- [x] this is a task 🔁 every day 📅 2021-09-12 ✅ 2023-03-08',
+            '- [ ] this is a task 🔁 every day ➕ 2023-03-08 12:00:00 📅 2021-09-13',
+            '- [x] this is a task 🔁 every day 📅 2021-09-12 ✅ 2023-03-08 12:00:00',
         ]);
     });
 
@@ -1536,8 +1559,8 @@ describe('created dates on recurring task', () => {
 
         // Act
         expect(line).toToggleTo([
-            '- [ ] this is a task 🔁 every day ➕ 2023-03-08 📅 2021-09-13',
-            '- [x] this is a task 🔁 every day ➕ 2021-09-11 📅 2021-09-12 ✅ 2023-03-08',
+            '- [ ] this is a task 🔁 every day ➕ 2023-03-08 12:00:00 📅 2021-09-13',
+            '- [x] this is a task 🔁 every day ➕ 2021-09-11 📅 2021-09-12 ✅ 2023-03-08 12:00:00',
         ]);
     });
 });
@@ -1545,7 +1568,7 @@ describe('created dates on recurring task', () => {
 describe('order of recurring tasks', () => {
     beforeEach(() => {
         jest.useFakeTimers();
-        jest.setSystemTime(new Date('2023-05-16'));
+        jest.setSystemTime(new Date('2023-05-16T12:00:00'));
     });
 
     function expectLineToApplyDoneStatusInUsersOrder(line: string, expectedLines: string[]) {
@@ -1558,7 +1581,7 @@ describe('order of recurring tasks', () => {
         const line = '- [ ] this is a recurring task 🔁 every day';
         const expectedLines = [
             '- [ ] this is a recurring task 🔁 every day',
-            '- [x] this is a recurring task 🔁 every day ✅ 2023-05-16',
+            '- [x] this is a recurring task 🔁 every day ✅ 2023-05-16 12:00:00',
         ];
 
         expect(line).toToggleWithRecurrenceInUsersOrderTo(expectedLines);
@@ -1571,7 +1594,7 @@ describe('order of recurring tasks', () => {
         const line = '- [ ] this is a recurring task 🔁 every day';
         const expectedLines = [
             '- [ ] this is a recurring task 🔁 every day',
-            '- [x] this is a recurring task 🔁 every day ✅ 2023-05-16',
+            '- [x] this is a recurring task 🔁 every day ✅ 2023-05-16 12:00:00',
         ];
 
         expect(line).toToggleWithRecurrenceInUsersOrderTo(expectedLines);
@@ -1583,7 +1606,7 @@ describe('order of recurring tasks', () => {
 
         const line = '- [ ] this is a recurring task 🔁 every day';
         const expectedLines = [
-            '- [x] this is a recurring task 🔁 every day ✅ 2023-05-16',
+            '- [x] this is a recurring task 🔁 every day ✅ 2023-05-16 12:00:00',
             '- [ ] this is a recurring task 🔁 every day',
         ];
 

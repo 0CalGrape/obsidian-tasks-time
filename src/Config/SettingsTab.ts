@@ -22,6 +22,7 @@ import { StatusSettings } from './StatusSettings';
 import { CustomStatusModal } from './CustomStatusModal';
 import { GlobalQuery } from './GlobalQuery';
 import { PresetsSettingsUI } from './PresetsSettingsUI';
+import { isValidDailyStartTime } from '../DateTime/DailyStart';
 
 export class SettingsTab extends PluginSettingTab {
     // If the UI needs a more complex setting you can create a
@@ -345,6 +346,26 @@ export class SettingsTab extends PluginSettingTab {
                 const settings = getSettings();
                 toggle.setValue(settings.setCancelledDate).onChange(async (value) => {
                     updateSettings({ setCancelledDate: value });
+                    await this.plugin.saveSettings();
+                });
+            });
+
+        new Setting(containerEl)
+            .setName(i18n.t('settings.dates.dailyStartTime.name'))
+            .setDesc(i18n.t('settings.dates.dailyStartTime.description'))
+            .addText((text) => {
+                const settings = getSettings();
+                text.setPlaceholder('04:00:00').setValue(settings.dailyStartTime);
+                text.inputEl.type = 'time';
+                text.inputEl.step = '1';
+                text.onChange(async (value) => {
+                    if (!isValidDailyStartTime(value)) {
+                        text.inputEl.addClass('tasks-settings-is-invalid');
+                        return;
+                    }
+
+                    text.inputEl.removeClass('tasks-settings-is-invalid');
+                    updateSettings({ dailyStartTime: value });
                     await this.plugin.saveSettings();
                 });
             });

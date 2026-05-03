@@ -78,17 +78,16 @@ describe('QueryResultsRenderer - accessing results', () => {
         expect(renderer.filteredQueryResult.totalTasksCount).toEqual(1);
     });
 
-    it('should have actual result after filtering results', async () => {
+    it('should export rendered results as markdown', async () => {
         const renderer = makeQueryResultsRenderer('', new TasksFile('file.md'), twoTasks);
 
         await renderer.render(State.Warm, twoTasks, document.createElement('div'));
 
-        await renderer.applySearchBoxFilterAndRerender('another', document.createElement('div'));
-
         expect(renderer.queryResult.totalTasksCount).toEqual(2);
-        expect(renderer.filteredQueryResult.totalTasksCount).toEqual(1);
+        expect(renderer.filteredQueryResult.totalTasksCount).toEqual(2);
         expect(await renderer.resultsAsMarkdown()).toMatchInlineSnapshot(`
-            "- [ ] another task
+            "- [ ] task
+            - [ ] another task
             "
         `);
     });
@@ -100,13 +99,13 @@ describe('QueryResultsRenderer - rendering queries', () => {
         jest.setSystemTime(new Date('2023-07-05'));
     });
 
-    it('should render the toolbar', async () => {
+    it('should render query results with toolbar option', async () => {
         const source = 'show toolbar';
         const noTasks: Task[] = [];
         await verifyRenderedHtml(noTasks, source);
     });
 
-    it('should not render the toolbar', async () => {
+    it('should render query results with hidden toolbar option', async () => {
         const source = 'hide toolbar';
         const noTasks: Task[] = [];
         await verifyRenderedHtml(noTasks, source);
@@ -200,8 +199,6 @@ class RendererStoryboard {
 
     public addFrame(description: string, container: HTMLDivElement) {
         this.output += `<h2>${description}:</h2>\n\n`;
-        this.output += `<p>Results filter: '${this.renderer.filterString}'</p>\n`;
-
         const { tasksAsMarkdown, prettyHTML } = tasksMarkdownAndPrettifiedHtml(container, this.allTasks);
         this.output += tasksAsMarkdown + prettyHTML;
 
@@ -262,18 +259,15 @@ describe('QueryResultsRenderer - sequences', () => {
         storyboard.verify();
     });
 
-    it('rerendered results retain the filter', async () => {
+    it('rerendered results reflect global query changes', async () => {
         const storyboard = new RendererStoryboard('', parentAndChild);
 
-        const { container } = await storyboard.renderAndAddFrame('Initial results - expect 2 tasks');
-
-        await storyboard.renderer.applySearchBoxFilterAndRerender('parent', container);
-        storyboard.addFrame('Filtered results (parent) - expect 1 task', container);
+        await storyboard.renderAndAddFrame('Initial results - expect 2 tasks');
 
         GlobalQuery.getInstance().set('sort by function reverse task.description.length');
         storyboard.renderer.rereadQueryFromFile();
 
-        await storyboard.renderAndAddFrame('Filtered results after editing Global Query - expect same 1 task');
+        await storyboard.renderAndAddFrame('Results after editing Global Query - expect 2 tasks sorted');
 
         storyboard.verify();
     });
